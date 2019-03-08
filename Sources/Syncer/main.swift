@@ -39,8 +39,9 @@ let trigger = DispatchWorkItem {
     if task.terminationStatus != 0,
         let output = String(data: stderr.fileHandleForReading.availableData, encoding: .utf8) {
         outputLog("Error syncing!\n\(output)")
+    } else {
+        outputLog("Finished syncing \(currentWorkingDirectory) to \(remotePath)")
     }
-    outputLog("Finished syncing \(currentWorkingDirectory) to \(remotePath)")
 }
 
 guard let watcher = try? Watcher(path: currentWorkingDirectory, trigger: trigger) else {
