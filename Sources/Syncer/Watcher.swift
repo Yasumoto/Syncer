@@ -23,7 +23,7 @@ public class Watcher {
     func createSource(_ pathReference: UnsafePointer<Int8>) -> DispatchSourceFileSystemObject {
         file = open(pathReference, O_EVTONLY)
         queue = DispatchQueue(label: "com.bjoli.Syncer.Watcher")
-        let source = DispatchSource.makeFileSystemObjectSource(fileDescriptor: file!, eventMask: .link, queue: queue)
+        let source = DispatchSource.makeFileSystemObjectSource(fileDescriptor: file!, eventMask: DispatchSource.FileSystemEvent.link.union(DispatchSource.FileSystemEvent.write), queue: queue)
         
         source.setEventHandler {
             DispatchQueue.main.async {
