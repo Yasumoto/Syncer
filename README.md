@@ -1,4 +1,4 @@
-# Syncer
+# ⤴️ Syncer
 
 `Syncer <hostname> <path>`
 

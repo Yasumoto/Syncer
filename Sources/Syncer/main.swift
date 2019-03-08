@@ -18,19 +18,24 @@ let format = DateFormatter()
 format.dateFormat = "MM-dd-yyyy HH:mm:ss"
 
 let trigger = DispatchWorkItem {
+    let start = Date()
+    print("[\(format.string(from: start))] Starting sync")
     let task = Process()
-    task.launchPath = "/usr/bin/scp"
-    task.arguments = [path, "\(hostname):"]
+    task.launchPath = "/usr/bin/rsync"
+    task.arguments = ["-a", path, "\(hostname):"]
     let stdout = Pipe()
+    let stderr = Pipe()
     task.standardOutput = stdout
+    task.standardInput = FileHandle.standardInput
+    task.standardError = stderr
     task.launch()
     task.waitUntilExit()
-    let now = Date()
-    print("\(format.string(from: now)) : \(path)")
+    let done = Date()
+    print("[\(format.string(from: done))] Finished syncing \(path)")
 }
 
 guard let watcher = try? Watcher(path: path, trigger: trigger) else {
-    print("Could not watch file: \(path)")
+    print("Could not watch: \(path)")
     exit(1)
 }
 
